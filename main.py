@@ -11,6 +11,24 @@ root = Tk()
 
 root.geometry("700x700")
 root.title("Gerenciamento")
+
+canvas = Canvas(root)
+canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+
+scrollbar = Scrollbar(root, command=canvas.yview)
+scrollbar.pack(side=RIGHT, fill=Y)
+
+canvas.configure(yscrollcommand=scrollbar.set)
+
+# Cria um Frame para conter todos os widgets
+main_frame = Frame(canvas)
+canvas.create_window((0, 0), window=main_frame, anchor="nw")
+
+# Vincula a barra de rolagem ao Frame
+
+
+
 frame = {}
 
 
@@ -189,7 +207,7 @@ def main_screen():
             break
 
         nome = call.Nome_dos_alunos[index]
-        frame[nome] = Frame(master = root, relief = RAISED, borderwidth=2, width=200, height=200, bg="white")
+        frame[nome] = Frame(master = main_frame, relief = RAISED, borderwidth=2, width=200, height=200, bg="white")
         frame[nome]['highlightbackground'] = 'black'  # Substitua 'red' pela cor desejada
         frame[nome]['highlightthickness'] = 5
         frame[nome].grid(row = i, column=j, padx = 5, pady = 5)
@@ -205,6 +223,7 @@ def main_screen():
         btn.pack(pady=60)
         btn.place(x = 55, y = 140)
 
+    main_frame.bind("<Configure>", lambda event: canvas.configure(scrollregion=canvas.bbox("all")))
     root.mainloop()
 
 thread = threading.Thread(target=call_update_screen)
